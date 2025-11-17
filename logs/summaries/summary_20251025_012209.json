@@ -1,0 +1,38 @@
+[
+  {
+    "planner": "HTN(GTPyhop)",
+    "strategy": "lazy",
+    "fail_prob": 0.1,
+    "seed": 42,
+    "success": true,
+    "steps": 200,
+    "replans": 189
+  },
+  {
+    "planner": "HTN(GTPyhop)",
+    "strategy": "lookahead",
+    "fail_prob": 0.1,
+    "seed": 42,
+    "success": true,
+    "steps": 200,
+    "replans": 189
+  },
+  {
+    "planner": "PDDL(PyPerplan)",
+    "strategy": "lazy",
+    "fail_prob": 0.1,
+    "seed": 42,
+    "success": true,
+    "steps": 200,
+    "replans": 191
+  },
+  {
+    "planner": "PDDL(PyPerplan)",
+    "strategy": "lookahead",
+    "fail_prob": 0.1,
+    "seed": 42,
+    "success": true,
+    "steps": 200,
+    "replans": 191
+  }
+]

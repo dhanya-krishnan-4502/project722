@@ -1,0 +1,5 @@
+(move taxi1 loc-3-4 loc-2-4)
+(move taxi1 loc-2-4 loc-1-4)
+(move taxi1 loc-1-4 loc-0-4)
+(pickup taxi1 passenger1 loc-0-4)
+(dropoff taxi1 passenger1 loc-0-4)
