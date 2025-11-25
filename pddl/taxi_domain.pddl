@@ -42,13 +42,13 @@
     )
   )
 
-  ;; Drop off passenger *at their goal location*
+  ;; Drop off passenger at their goal location*
   (:action dropoff
     :parameters (?t - taxi ?p - passenger ?l - location)
     :precondition (and 
         (at ?t ?l)
         (in-taxi ?p)
-        (goal-loc ?p ?l)          ; <-- MUST be at passenger’s goal loc
+        (goal-loc ?p ?l)          
     )
     :effect (and
         (not (in-taxi ?p))

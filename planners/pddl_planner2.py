@@ -48,7 +48,6 @@ class PDDLPlanner:
         self.heuristic = "blind"
         self._heuristic_obj = BlindHeuristic
 
-        # Build connectivity ONCE
         self._connectivity_string = self._build_connectivity()
 
     
@@ -62,7 +61,6 @@ class PDDLPlanner:
         for (r, c), blocked in GLOBAL_WALLS.items():
             for direction, (dr, dc) in DELTAS.items():
 
-                # Skip blocked directions
                 if direction in blocked:
                     continue
 
@@ -70,21 +68,15 @@ class PDDLPlanner:
                 if not (0 <= nr < 5 and 0 <= nc < 5):
                     continue
 
-                # Ensure reverse movement isn't blocked on the neighbor
                 if REV[direction] in GLOBAL_WALLS.get((nr, nc), set()):
                     continue
 
-                # Add connectivity
                 lines.append(f"(connected loc-{r}-{c} loc-{nr}-{nc})")
-                # Optionally add reverse; but domain is directional, so don't add automatically
 
         return "\n      ".join(lines)
 
     def _create_problem_file(self, preds):
-        """
-        Use generate_problem() to create a valid PDDL problem file.
-        Returns the temporary file path.
-        """
+
         pddl_text = generate_problem(preds, self._connectivity_string)
         tf = tempfile.NamedTemporaryFile(delete=False, suffix=".pddl")
         tf.write(pddl_text.encode("utf-8"))
@@ -92,12 +84,8 @@ class PDDLPlanner:
         return tf.name
 
     def _normalize_step(self, step):
-        """
-        Robustly extract the operator name + arguments as lowercase strings.
-        Handles both pyperplan Operator objects and string fallback.
-        """
+
         try:
-            # Pyperplan Operator
             name = step.name.lower()
             params = []
             for arg in step.args:
@@ -108,14 +96,12 @@ class PDDLPlanner:
             return name, params
 
         except Exception:
-            # fallback for string-based operators
             s = str(step).strip().lower()
             s = s.strip("()")
             parts = s.split()
             return parts[0], parts[1:]
 
 
-    # ---------------------------------------------------------------------
     def _dir_from_locs(self, loc_from, loc_to):
         try:
             r1, c1 = map(int, loc_from.split("-")[1:])
@@ -123,19 +109,19 @@ class PDDLPlanner:
         except:
             return None
 
-        # Row decreases → north
+        # Row decreases  north
         if r2 == r1 - 1:
             return "north"
 
-        # Row increases → south
+        # Row increases  south
         if r2 == r1 + 1:
             return "south"
 
-        # Column decreases → west
+        # Column decreases  west
         if c2 == c1 - 1:
             return "west"
 
-        # Column increases → east
+        # Column increases  east
         if c2 == c1 + 1:
             return "east"
 
@@ -143,18 +129,14 @@ class PDDLPlanner:
 
     # ---------------------------------------------------------------------
     def plan(self, preds):
-        """Produce a list of primitive taxi actions using Pyperplan."""
         from inspect import signature
         bfs_sig = signature(breadth_first_search)
         num_params = len(bfs_sig.parameters)
 
-        # 1. Generate a fresh problem file for this state
         problem_file = self._create_problem_file(preds)
 
-        # 2. Run pyperplan search
         try:
             if num_params == 1:
-                # Older pyperplan: breadth_first_search(task)
                 plan = search_plan(
                     self.domain_file,
                     problem_file,
@@ -162,7 +144,6 @@ class PDDLPlanner:
                     None,
                 )
             else:
-                # Newer pyperplan: breadth_first_search(task, heuristic)
                 plan = search_plan(
                     self.domain_file,
                     problem_file,
@@ -176,17 +157,13 @@ class PDDLPlanner:
         if not plan:
             return []
 
-        # 3. Convert plan operators -> Taxi-v3 primitive actions
         env_actions = []
 
         for step in plan:
             s = str(step).lower()
 
-            # ---- MOVE OPERATORS ----
             if "(move" in s:
-                # Extract all loc-* tokens from the string
-                # The FIRST TWO are the head of the operator:
-                #   (move taxi1 loc-3-4 loc-2-4)
+               
                 locs = re.findall(r"loc-\d-\d", s)
                 if len(locs) >= 2:
                     loc_from = locs[0]
@@ -197,17 +174,13 @@ class PDDLPlanner:
                     else:
                         print("[WARN] could not infer direction from:", loc_from, loc_to)
 
-            # ---- PICKUP / DROPOFF ----
             elif "(pickup" in s:
                 env_actions.append("pickup")
 
             elif "(dropoff" in s:
                 env_actions.append("dropoff")
 
-        # Debug prints for sanity
-        print("\n[PDDL RAW PLAN]")
-        for step in plan:
-            print("  ", step)
+
 
         print("\n[PDDL ENV ACTIONS]")
         print(env_actions)

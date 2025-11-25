@@ -1,0 +1,13 @@
+{
+    "planner": "HTN",
+    "strategy": "lazy",
+    "fail_prob": 0.1,
+    "seed": 10,
+    "grid_size": 5,
+    "success": false,
+    "steps": 0,
+    "replans": 2,
+    "planning_time_total": 0.00010800361633300781,
+    "planning_time_avg": 5.4001808166503906e-05,
+    "wallclock_time": 0.0001
+}

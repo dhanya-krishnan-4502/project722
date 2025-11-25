@@ -1,12 +1,10 @@
 import gtpyhop
 from collections import deque
 
-# --- Domain initialization ---
 domain = gtpyhop.Domain("taxi_htn")
 gtpyhop.current_domain = domain
 gtpyhop.current_domain.verbose = 0
 
-# --- Static wall map (Taxi-v3 standard) ---
 GLOBAL_WALLS = {
     (0,0): {'north', 'west'},
     (0,1): {'east', 'north'},
@@ -38,18 +36,8 @@ GLOBAL_WALLS = {
 
 REV = {'north': 'south', 'south': 'north', 'east': 'west', 'west': 'east'}
 DELTAS = {'north': (-1, 0), 'south': (1, 0), 'east': (0, 1), 'west': (0, -1)}
-# for (r, c), dirs in list(GLOBAL_WALLS.items()):
-#     for d in list(dirs):
-#         dr, dc = DELTAS[d]
-#         nr, nc = r + dr, c + dc
-#         if 0 <= nr < 5 and 0 <= nc < 5:
-#             opposite = REV[d]
-#             GLOBAL_WALLS.setdefault((nr, nc), set()).add(opposite)
-# print("[DEBUG WALLS SUMMARY]")
-# for (r, c), dirs in sorted(GLOBAL_WALLS.items()):
-#     print(f"  ({r},{c}): {dirs}")
 
-# --- State factory ---
+
 def make_initial_state(preds):
     s = gtpyhop.State("s0")
     s.taxi = preds["taxi_at"]
@@ -58,7 +46,6 @@ def make_initial_state(preds):
     s.landmarks = {0: (0, 0), 1: (0, 4), 2: (4, 0), 3: (4, 3)}
     return s
 
-# --- Operators ---
 def move(state, direction):
     r, c = state.taxi
     dr, dc = DELTAS[direction]
@@ -85,7 +72,6 @@ def dropoff(state):
 
 gtpyhop.declare_operators(move, pickup, dropoff)
 
-# --- BFS navigation helper ---
 def valid_moves(cell):
     r, c = cell
     for d, (dr, dc) in DELTAS.items():
@@ -98,8 +84,7 @@ def valid_moves(cell):
 def navigate(state, goal_pos):
 
     start, goal = state.taxi, tuple(goal_pos)
-    # print(f"[DEBUG NAV] start={start} goal={goal}")
-    # print(f"[DEBUG NAV] len(GLOBAL_WALLS)={len(GLOBAL_WALLS)} sample={(3,4)}→{GLOBAL_WALLS.get((3,4))}")
+   
 
     if start == goal: return []
     q = deque([(start, [])])
@@ -114,20 +99,12 @@ def navigate(state, goal_pos):
             q.append((nxt, new_path))
     return []
 
-# def get_passenger(state):
-#     if state.passenger_loc == 4:
-#         return []
-#     path = navigate(state, state.landmarks[state.passenger_loc])
-#     if not path:
-#         return False
-#     return path + [('pickup',)]
+
 def get_passenger(state):
     if state.passenger_loc == 4:
         return []
     goal_pos = state.landmarks[state.passenger_loc]
-    # print(f"[DEBUG] get_passenger: start={state.taxi}, goal={goal_pos}")
     path = navigate(state, goal_pos)
-    # print(f"[DEBUG] navigate returned: {path}")
     if not path:
         return False
     return path + [('pickup',)]
@@ -154,21 +131,16 @@ gtpyhop.declare_task_methods('deliver_passenger', deliver_passenger)
 gtpyhop.declare_task_methods('transport_passenger', transport_passenger)
 gtpyhop.declare_task_methods('root_task', root_task)
 
-# --- Planner interface ---
 class HTNPlanner:
     name = "HTN(GTPyhop)"
 
     def plan(self, preds):
-        """Convert predicates → state → plan."""
         import sys, io
-        # _stdout = sys.stdout
-        # sys.stdout = io.StringIO()  # temporarily silence FP> logs
-
+        
         s0 = make_initial_state(preds)
         tasks = [("root_task",)]
-        plan = gtpyhop.find_plan(s0, tasks)  # <-- FIXED HERE
+        plan = gtpyhop.find_plan(s0, tasks) 
 
-        # sys.stdout = _stdout  # restore output
 
         if not plan or plan is False:
             return []

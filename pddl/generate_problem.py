@@ -6,9 +6,7 @@ LANDMARKS = {
 }
 
 def generate_problem(preds, connectivity_string):
-    """
-    Generate a correct PDDL problem that matches Taxi-v3 semantics.
-    """
+
 
     taxi_r, taxi_c = preds["taxi_at"]
     p_loc = preds["passenger_loc"]
@@ -16,13 +14,11 @@ def generate_problem(preds, connectivity_string):
 
     taxi_loc = f"loc-{taxi_r}-{taxi_c}"
 
-    # Passenger start
     if p_loc == 4:
         passenger_init = "(in-taxi passenger1)"
     else:
         passenger_init = f"(at-passenger passenger1 {LANDMARKS[p_loc]})"
 
-    # Destination landmark
     goal_loc_decl = f"(goal-loc passenger1 {LANDMARKS[dest]})"
 
     all_locations = " ".join(f"loc-{r}-{c}" for r in range(5) for c in range(5))

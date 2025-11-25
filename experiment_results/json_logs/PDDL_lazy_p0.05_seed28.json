@@ -1,0 +1,13 @@
+{
+    "planner": "PDDL",
+    "strategy": "lazy",
+    "fail_prob": 0.05,
+    "seed": 28,
+    "grid_size": 5,
+    "success": true,
+    "steps": 18,
+    "replans": 2,
+    "planning_time_total": 0.008949756622314453,
+    "planning_time_avg": 0.0044748783111572266,
+    "wallclock_time": 0.0092
+}

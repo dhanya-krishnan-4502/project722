@@ -1,0 +1,13 @@
+{
+    "planner": "HTN",
+    "strategy": "lookahead",
+    "fail_prob": 0.1,
+    "seed": 21,
+    "grid_size": 5,
+    "success": true,
+    "steps": 14,
+    "replans": 5,
+    "planning_time_total": 0.0014765262603759766,
+    "planning_time_avg": 0.0002953052520751953,
+    "wallclock_time": 0.0017
+}
