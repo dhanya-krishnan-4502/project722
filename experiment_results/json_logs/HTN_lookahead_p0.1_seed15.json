@@ -5,9 +5,9 @@
     "seed": 15,
     "grid_size": 5,
     "success": true,
-    "steps": 18,
-    "replans": 4,
-    "planning_time_total": 0.001863718032836914,
-    "planning_time_avg": 0.0004659295082092285,
-    "wallclock_time": 0.0021
+    "steps": 17,
+    "replans": 3,
+    "planning_time_total": 0.0022292137145996094,
+    "planning_time_avg": 0.0007430712381998698,
+    "wallclock_time": 0.0026
 }

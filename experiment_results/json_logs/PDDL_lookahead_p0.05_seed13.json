@@ -6,8 +6,8 @@
     "grid_size": 5,
     "success": true,
     "steps": 15,
-    "replans": 2,
-    "planning_time_total": 0.010084867477416992,
-    "planning_time_avg": 0.005042433738708496,
-    "wallclock_time": 0.0104
+    "replans": 1,
+    "planning_time_total": 0.00606083869934082,
+    "planning_time_avg": 0.00606083869934082,
+    "wallclock_time": 0.0063
 }
