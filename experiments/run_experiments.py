@@ -122,67 +122,108 @@ def generate_plots():
 
     df = pd.read_csv(CSV_FILE)
 
-    sns.set(style="whitegrid", font_scale=1.2)
+    # --- Global plot settings ---
+    sns.set_theme(style="whitegrid")
+    plt.rcParams.update({
+        "font.size": 11,
+        "axes.labelsize": 12,
+        "axes.titlesize": 13,
+        "legend.fontsize": 11,
+        "xtick.labelsize": 11,
+        "ytick.labelsize": 11
+    })
+
+    # Distinct palette to avoid overlap
+    palette = sns.color_palette("tab10")
+
+    def save_plot(fig_name):
+        plt.tight_layout()
+        plt.savefig(f"{OUTPUT_DIR}/{fig_name}.png", dpi=300, bbox_inches="tight")
+        plt.close()
 
     # 1. Success rate vs fail_prob
     plt.figure(figsize=(8, 6))
     sns.lineplot(
         data=df, x="fail_prob", y="success",
-        hue="planner", style="strategy", markers=True
+        hue="planner", style="strategy",
+        markers=True, dashes=True,
+        palette=palette,
+        linewidth=2, markersize=10,
     )
-    plt.title("Success Rate vs Failure Probability")
-    plt.savefig(f"{OUTPUT_DIR}/success_rate.png", dpi=200)
-    plt.close()
+    plt.ylabel("Success Rate")
+    plt.xlabel("Failure Probability")
+    plt.title("Success Rate vs Failure Probability", pad=12)
+    save_plot("success_rate")
 
     # 2. Replans vs fail_prob
     plt.figure(figsize=(8, 6))
     sns.lineplot(
         data=df, x="fail_prob", y="replans",
-        hue="planner", style="strategy", markers=True
+        hue="planner", style="strategy",
+        markers=True, dashes=True,
+        palette=palette,
+        linewidth=2, markersize=10,
     )
-    plt.title("Replans vs Failure Probability")
-    plt.savefig(f"{OUTPUT_DIR}/replans.png", dpi=200)
-    plt.close()
+    plt.ylabel("Replans")
+    plt.xlabel("Failure Probability")
+    plt.title("Replans vs Failure Probability", pad=12)
+    save_plot("replans")
 
     # 3. Steps vs fail_prob
     plt.figure(figsize=(8, 6))
     sns.lineplot(
         data=df, x="fail_prob", y="steps",
-        hue="planner", style="strategy", markers=True
+        hue="planner", style="strategy",
+        markers=True, dashes=True,
+        palette=palette,
+        linewidth=2, markersize=10,
     )
-    plt.title("Steps vs Failure Probability")
-    plt.savefig(f"{OUTPUT_DIR}/steps.png", dpi=200)
-    plt.close()
+    plt.ylabel("Steps")
+    plt.xlabel("Failure Probability")
+    plt.title("Steps vs Failure Probability", pad=12)
+    save_plot("steps")
 
     # 4. Total planning time vs fail_prob
     plt.figure(figsize=(8, 6))
     sns.lineplot(
         data=df, x="fail_prob", y="planning_time_total",
-        hue="planner", style="strategy", markers=True
+        hue="planner", style="strategy",
+        markers=True, dashes=True,
+        palette=palette,
+        linewidth=2, markersize=10,
     )
-    plt.title("Total Planning Time vs Failure Probability")
-    plt.savefig(f"{OUTPUT_DIR}/planning_time_total.png", dpi=200)
-    plt.close()
+    plt.ylabel("Total Planning Time (s)")
+    plt.xlabel("Failure Probability")
+    plt.title("Total Planning Time vs Failure Probability", pad=12)
+    save_plot("planning_time_total")
 
     # 5. Average planning time per replan vs fail_prob
     plt.figure(figsize=(8, 6))
     sns.lineplot(
         data=df, x="fail_prob", y="planning_time_avg",
-        hue="planner", style="strategy", markers=True
+        hue="planner", style="strategy",
+        markers=True, dashes=True,
+        palette=palette,
+        linewidth=2, markersize=10,
     )
-    plt.title("Average Planning Time per Replan vs Failure Probability")
-    plt.savefig(f"{OUTPUT_DIR}/planning_time_avg.png", dpi=200)
-    plt.close()
+    plt.ylabel("Avg. Planning Time per Replan (s)")
+    plt.xlabel("Failure Probability")
+    plt.title("Average Planning Time vs Failure Probability", pad=12)
+    save_plot("planning_time_avg")
 
-    # 6. Wall-clock time of run vs fail_prob
+    # 6. Wallclock time vs fail_prob
     plt.figure(figsize=(8, 6))
     sns.lineplot(
         data=df, x="fail_prob", y="wallclock_time",
-        hue="planner", style="strategy", markers=True
+        hue="planner", style="strategy",
+        markers=True, dashes=True,
+        palette=palette,
+        linewidth=2, markersize=10,
     )
-    plt.title("Total Wallclock Episode Time vs Failure Probability")
-    plt.savefig(f"{OUTPUT_DIR}/wallclock_time.png", dpi=200)
-    plt.close()
+    plt.ylabel("Wall-Clock Time (s)")
+    plt.xlabel("Failure Probability")
+    plt.title("Total Wallclock Episode Time vs Failure Probability", pad=12)
+    save_plot("wallclock_time")
 
 if __name__ == "__main__":
     run_all_experiments()

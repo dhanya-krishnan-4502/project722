@@ -7,7 +7,7 @@
     "success": true,
     "steps": 7,
     "replans": 1,
-    "planning_time_total": 0.015844106674194336,
-    "planning_time_avg": 0.015844106674194336,
-    "wallclock_time": 0.016
+    "planning_time_total": 0.006447792053222656,
+    "planning_time_avg": 0.006447792053222656,
+    "wallclock_time": 0.0066
 }
